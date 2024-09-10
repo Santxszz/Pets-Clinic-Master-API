@@ -1,0 +1,303 @@
+openapi: 3.0.3
+info:
+  title: Pets Clinic 1.0
+  description: Uma API REST que controla o backend de uma aplicação de uma Clinica de Pets.
+  version: 1.0.0
+servers:
+  - url: https://localhost:3000/api/v3
+tags:
+  - name: tutors
+    description: Tudo sobre os tutores cadastrados.
+  - name: tutor
+    description: Controle os tutores.
+  - name: pet
+    description: Operações sobre pet
+paths:
+  /tutors:
+    get:
+      tags:
+        - tutors
+      summary: Listagem de todos os tutores.
+      description: Este endpoint retorna uma **lista de todos os tutores (usuários)** cadastrados no servidor.
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tutors'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Tutors'
+        '500':
+          description: "Erro interno no servidor"
+        'default':
+          description: "Erro inesperado"
+
+  /tutor:
+    post:
+      tags:
+        - tutor
+      summary: Cria um novo tutor
+      description: Insere via metodo POST um novo tutor ao servidor.
+      requestBody:
+        description: Request body para criar um novo tutor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tutor'
+      responses:
+        "201":
+          description: "Tutor criado"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tutor'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Tutor'
+            
+        "400":
+          description: "Nome ou email inválidos || Input fields do request body não informados"
+
+
+        "default":
+          description: Erro inesperado.
+
+  /tutor/{id}:
+    put:
+      tags:
+        - tutor
+      summary: Atualiza o cadastro de um tutor usando o ID como parametro na URI
+      description: Este endpoint atualiza os dados cadastrados de um tutor pelo ID informado no path URI.
+      parameters:
+        - name: id
+          in: path
+          description: O id do tutor passado via parametro URI
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Request body para atualizar um tutor com base no seu ID no path da URI
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tutor"
+      responses:
+        "201":
+          description: "OK"
+        "400":
+          description: "Input Fiels não informados | Nome ou Email informado é invalido | O ID do tutor não foi encontrado no banco de dados."
+        "default":
+          description: "Erro inesperado."
+    
+    delete:
+      tags:
+        - tutor
+      summary: Delete um tutor com base no ID passado no path URI
+      description: Este endpoint tem como função excluir um determinado dado no banco de dados.
+      parameters:
+        - name: id
+          in: path
+          description: O id do tutor passado via parametro URI
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Deletado com sucesso.
+        400:
+          description: O id do tutor não foi encontrado ou não existe.
+
+  /pet/{tutorId}:
+    post:
+      tags:
+        - pet
+      summary: Insere um PET atribuindo á um tutor.
+      description: Este endpoint faz a inserção de um PET atribuindo-o a um Tutor.
+      parameters:
+        - name: tutorId
+          in: path
+          description: O id do tutor passado via parametro URI
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Request body parar criar um novo pet.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        201:
+          description: Criado com sucesso.
+        400:
+          description: O Id do tutor informado é inválido. | Os dados dos inputsfields não foram informados.
+        
+  /pet/{petId}/tutor/{tutorId}:
+    put:
+      tags:
+        - pet
+      summary: Atualiza o cadastro de um pet atribuido a um tutor.
+      description: Este endpoint faz a atualização dos dados de um pet que está atribuído a um tutor.
+      parameters:
+        - name: petId
+          in: path
+          description: O id do pet passado via parametro URI
+          required: true
+          schema:
+            type: integer
+        - name: tutorId
+          in: path
+          description: O id do tutor do pet passado via parametro URI
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: O requestbody para atualizar os dados do pet. (ID Não precisa.)
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        201:
+          description: "Atualizado com sucesso."
+        400:
+          description: "O Id do Tutor ou do Pet não é válido ou não existe | Os inputfields não foram preenchidos."
+    delete:
+      tags:
+        - pet
+      summary: Delete um pet que é atribuído a um tutor.
+      description: este endpoint faz a exclusão dos dados de um pet que está atribuído a um tutor.
+      parameters:
+        - name: petId
+          in: path
+          description: O id do pet passado via parametro URI
+          required: true
+          schema:
+            type: integer
+        - name: tutorId
+          in: path
+          description: O id do tutor do pet passado via parametro URI
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Deletado com sucesso.
+        400:
+          description: Tutor ou pet não encontrado ou não existe.
+      
+  
+components:
+  schemas:
+    Tutors:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: "Jhon Doe"
+        phone:
+          type: string
+          example: "+55 (62) 98416-0323"
+        email:
+          type: string
+          format: email
+          example: "jhondoe@email.com"
+        date_of_birth:
+          type: string
+          format: date-time
+          example: "1993-12-12 10:10"
+        pets:
+          $ref: "#/components/schemas/Pet"
+          
+      xml:
+        name: tutors
+        
+    Tutor:
+      type: object
+      required:
+        - name
+        - phone
+        - email
+        - date_of_birth
+        - zip_code
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Santino Corleone"
+        phone:
+          type: string
+          example: "+1 532232123"
+        email:
+          type: string
+          format: email
+          example: "santinocorleone@godfather.com"
+        date_of_birth:
+          type: string
+          format: date-time
+          example: "1990-12-10 00:12"
+        zip_code:
+          type: string
+          example: "988323"
+      xml:
+        name: tutor
+    
+   
+    Pet:
+      type: object
+      required:
+        - name
+        - species
+        - carry
+        - weight
+        - date_of_birth
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "Lilo"
+        species:
+          type: string
+          example: "Dog"
+        carry:
+          type: string
+          example: "p"
+        weight:
+          type: number
+          example: 5
+        date_of_birth:
+          type: string
+          format: date-time
+          example: 1993-12-12 10:10
+
+
+  requestBodies:
+    Tutor:
+      description: Objeto do tutor que precisa ser informado para inserção do mesmo no servidor.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Tutor'
+  
+  
+    Pet:
+      description: Objet do tutor que precisa ser informado para inserção do mesmo no servidor.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pet'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Pet'
+
