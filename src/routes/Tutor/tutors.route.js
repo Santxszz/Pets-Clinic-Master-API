@@ -1,15 +1,9 @@
-const { Router } = require("express");
-const Tutor = require("../../database/models/Tutor");
-const Pet = require("../../database/models/Pet");
+const { Router } = require('express')
 
-const tutorsRouter = Router();
+const TutorController = require('../../controllers/Tutor/TutorController')
 
-tutorsRouter.get("/tutors", async (req, res) => {
-  const Tutors = await Tutor.findAll({ include: Pet });
-  if (!Tutors) {
-    return res.status(400).json({ message: "Data not found." });
-  }
-  res.status(200).send({ Tutors });
-});
+const tutorsRouter = Router()
 
-module.exports = tutorsRouter;
+tutorsRouter.get('/tutors', TutorController.listTutors)
+
+module.exports = tutorsRouter

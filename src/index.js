@@ -9,6 +9,7 @@ const swaggerDocumentation = require("../swagger.json");
 const tutorsRouter = require("./routes/Tutor/tutors.route");
 const tutorRouter = require("./routes/Tutor/tutor.route");
 const petsRoute = require("./routes/Pet/pet.route");
+const { errors } = require("celebrate");
 
 // Instâncias
 const app = express();
@@ -24,6 +25,9 @@ app.use(petsRoute);
 
 // Rota Api Docs
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocumentation));
+
+// Middleware Celebrate Errors
+app.use(errors())
 
 // Conexão DB
 dbConnect.sync().then(() => {

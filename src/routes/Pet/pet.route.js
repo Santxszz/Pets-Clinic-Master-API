@@ -12,12 +12,21 @@ petsRoute.post("/pet/:tutorId", async (req, res) => {
   const weight = req.body.weight;
   const date_of_birth = req.body.date_of_birth;
 
-  if (isNaN(TutorId)) {
-    return res.status(400).json({ message: "Id provided is invalid!" });
+  const isValidId = /^\d+$/.test(req.params.tutorId);
+  if (!isValidId) {
+    return res.status(400).json({
+      message: "Tutor ID is invalid.",
+      status: 400,
+      error: "Bad Request"
+    });
   }
 
   if (!TutorId || !name || !species || !carry || !weight || !date_of_birth) {
-    return res.status(400).json({ message: "Input fields is empty!" });
+    return res.status(400).json({
+      message: "Input fields is empty!",
+      status: 400,
+      error: "Bad Request"
+    });
   }
 
   const PetData = {
@@ -32,8 +41,12 @@ petsRoute.post("/pet/:tutorId", async (req, res) => {
   const getTutorData = await Tutor.findOne({ where: { id: TutorId } });
   if (!getTutorData) {
     return res
-      .status(400)
-      .json({ message: "tutor id provided does not exist in the database." });
+      .status(404)
+      .json({
+        message: "Tutor is not found!",
+        status: 404,
+        error: "Not Found"
+      });
   }
 
   try {
@@ -54,8 +67,14 @@ petsRoute.put("/pet/:petId/tutor/:tutorId", async (req, res) => {
   const weight = req.body.weight;
   const date_of_birth = req.body.date_of_birth;
 
-  if (isNaN(tutorId) || isNaN(petId)) {
-    return res.status(400).json({ message: "Id provided is invalid!" });
+  const isValidTutorId = /^\d+$/.test(req.params.tutorId);
+  const isValidPetId = /^\d+$/.test(req.params.petId);
+  if (!isValidTutorId && isValidPetId) {
+    return res.status(400).json({
+      message: "Tutor or Pet ID is invalid.",
+      status: 400,
+      error: "Bad Request"
+    });
   }
 
   if (
@@ -67,7 +86,11 @@ petsRoute.put("/pet/:petId/tutor/:tutorId", async (req, res) => {
     !weight ||
     !date_of_birth
   ) {
-    return res.status(400).json({ message: "Input fields is empty!" });
+    return res.status(400).json({
+      message: "Input fields is empty!",
+      status: 400,
+      error: "Bad Request"
+    });
   }
 
   const PetData = {
@@ -82,13 +105,21 @@ petsRoute.put("/pet/:petId/tutor/:tutorId", async (req, res) => {
     where: { id: petId, TutorId: tutorId },
   });
   if (!PetDataSearch) {
-    return res.status(400).json({ message: "Tutor or ID pet is not valid." });
+    return res.status(404).json({
+      message: "Tutor or ID pet is not found.",
+      status: 404,
+      error:"Not Found"
+    });
   }
 
   try {
     await Pet.update(PetData, { where: { id: petId, TutorId: tutorId } }).then(
       () => {
-        res.status(201).json({ message: "Pet updated sucessfully!" });
+        res.status(201).json({
+          message: "Pet updated sucessfully!",
+          status: 201,
+          info: "Created"
+        });
       }
     );
   } catch (err) {
@@ -100,15 +131,21 @@ petsRoute.delete("/pet/:petId/tutor/:tutorId", async (req, res) => {
   const petId = Number(req.params.petId);
   const tutorId = Number(req.params.tutorId);
 
-  if (isNaN(tutorId) || isNaN(petId)) {
-    return res.status(400).json({ message: "Id provided is invalid!" });
+  const isValidTutorId = /^\d+$/.test(req.params.tutorId);
+  const isValidPetId = /^\d+$/.test(req.params.petId);
+  if (!isValidTutorId && isValidPetId) {
+    return res.status(400).json({
+      message: "Tutor or Pet ID is invalid.",
+      status: 400,
+      error: "Bad Request"
+    });
   }
 
   const PetSearch = await Pet.findOne({
     where: { id: petId, TutorId: tutorId },
   });
   if (!PetSearch) {
-    return res.status(400).json({ message: "Tutor or pet id not existis!" });
+    return res.status(404).json({ message: "Tutor or pet id not found!", status: 404, error: "Not Found" });
   }
 
   try {
