@@ -1,10 +1,9 @@
 const Pet = require('../../database/models/Pet')
 const Tutor = require('../../database/models/Tutor')
 
-exports.DeleteTutorService = async id => {
+exports.DeletePetService = async (petId, tutorId) => {
   try {
-    await Pet.destroy({ where: { TutorId: id } })
-    await Tutor.destroy({ where: { id: id } })
+    await Pet.destroy({ where: { id: petId, TutorId: tutorId } })
       .then(async () => {
         return
       })
