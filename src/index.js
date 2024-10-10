@@ -1,15 +1,17 @@
 // Bibliotecas
 const express = require("express");
-const dbConnect = require("./database/connect");
 const dotenv = require("dotenv").config();
 const swaggerUI = require("swagger-ui-express");
+const { errors } = require("celebrate");
+
+const dbConnect = require("./database/connect");
 const swaggerDocumentation = require("../swagger.json");
 
 // Routes
 const tutorsRouter = require("./routes/Tutor/tutors.route");
 const tutorRouter = require("./routes/Tutor/tutor.route");
 const petsRoute = require("./routes/Pet/pet.route");
-const { errors } = require("celebrate");
+
 
 // Instâncias
 const app = express();
