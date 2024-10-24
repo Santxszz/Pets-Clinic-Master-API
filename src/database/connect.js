@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 const dotenv = require("dotenv").config();
 
-const sequelize = new Sequelize(`${process.env.dbHost}`, {
+const sequelize = new Sequelize("postgresql://neondb_owner:nuaMysvdqi93@ep-shrill-band-a4znraja.us-east-1.aws.neon.tech/neondb?sslmode=require", {
   dialectOptions: {
     ssl: {
       requre: true,
