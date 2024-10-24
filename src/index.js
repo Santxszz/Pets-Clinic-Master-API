@@ -2,6 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
 const swaggerUI = require("swagger-ui-express");
+const cors = require("cors");
 const { errors } = require("celebrate");
 
 const dbConnect = require("./database/connect");
@@ -19,6 +20,7 @@ const app = express();
 // Configurações do Express
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
 // Rotas
 app.use(tutorsRouter);
