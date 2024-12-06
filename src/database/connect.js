@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
 const dotenv = require("dotenv").config();
+const pg = require("pg")
 
 const sequelize = new Sequelize("postgresql://neondb_owner:nuaMysvdqi93@ep-shrill-band-a4znraja.us-east-1.aws.neon.tech/neondb?sslmode=require", {
   dialectOptions: {
@@ -7,7 +8,8 @@ const sequelize = new Sequelize("postgresql://neondb_owner:nuaMysvdqi93@ep-shril
       requre: true,
       rejectUnauthorized: false, // <-- Add this line
     }
-  }
+  },
+  dialectModule: pg
 });
 
 try {
