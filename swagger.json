@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Pets Clinic 1.0",
-    "description": "Uma API REST que controla o backend de uma aplicação de uma Clinica de Pets.",
+    "description": "A REST API that manages the backend of a Pet Clinic application.",
     "version": "1.0.0"
   },
   "servers": [
@@ -13,15 +13,15 @@
   "tags": [
     {
       "name": "tutors",
-      "description": "Tudo sobre os tutores cadastrados."
+      "description": "Everything about registered tutors."
     },
     {
       "name": "tutor",
-      "description": "Controle os tutores."
+      "description": "Manage tutors."
     },
     {
       "name": "pet",
-      "description": "Operações sobre pet"
+      "description": "Operations about pets"
     }
   ],
   "paths": {
@@ -30,8 +30,8 @@
         "tags": [
           "tutors"
         ],
-        "summary": "Listagem de todos os tutores.",
-        "description": "Este endpoint retorna uma **lista de todos os tutores (usuários)** cadastrados no servidor.",
+        "summary": "List all tutors.",
+        "description": "This endpoint returns a **list of all tutors (users)** registered on the server.",
         "responses": {
           "200": {
             "description": "OK",
@@ -49,10 +49,10 @@
             }
           },
           "500": {
-            "description": "Erro interno no servidor"
+            "description": "Internal server error"
           },
           "default": {
-            "description": "Erro inesperado"
+            "description": "Unexpected error"
           }
         }
       }
@@ -62,10 +62,10 @@
         "tags": [
           "tutor"
         ],
-        "summary": "Cria um novo tutor",
-        "description": "Insere via metodo POST um novo tutor ao servidor.",
+        "summary": "Create a new tutor",
+        "description": "Inserts a new tutor into the server using the POST method.",
         "requestBody": {
-          "description": "Request body para criar um novo tutor.",
+          "description": "Request body to create a new tutor.",
           "content": {
             "application/json": {
               "schema": {
@@ -76,7 +76,7 @@
         },
         "responses": {
           "201": {
-            "description": "Tutor criado",
+            "description": "Tutor created",
             "content": {
               "application/json": {
                 "schema": {
@@ -91,10 +91,10 @@
             }
           },
           "400": {
-            "description": "Nome ou email inválidos || Input fields do request body não informados"
+            "description": "Invalid name or email || Input fields in the request body were not provided"
           },
           "default": {
-            "description": "Erro inesperado."
+            "description": "Unexpected error."
           }
         }
       }
@@ -104,13 +104,13 @@
         "tags": [
           "tutor"
         ],
-        "summary": "Atualiza o cadastro de um tutor usando o ID como parametro na URI",
-        "description": "Este endpoint atualiza os dados cadastrados de um tutor pelo ID informado no path URI.",
+        "summary": "Update a tutor's record using the ID as a parameter in the URI",
+        "description": "This endpoint updates the registered data of a tutor by the ID provided in the URI path.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "O id do tutor passado via parametro URI",
+            "description": "The tutor's ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -118,7 +118,7 @@
           }
         ],
         "requestBody": {
-          "description": "Request body para atualizar um tutor com base no seu ID no path da URI",
+          "description": "Request body to update a tutor based on their ID in the URI path",
           "content": {
             "application/json": {
               "schema": {
@@ -132,10 +132,10 @@
             "description": "OK"
           },
           "400": {
-            "description": "Input Fiels não informados | Nome ou Email informado é invalido | O ID do tutor não foi encontrado no banco de dados."
+            "description": "Input fields were not provided | Invalid name or email | The tutor's ID was not found in the database."
           },
           "default": {
-            "description": "Erro inesperado."
+            "description": "Unexpected error."
           }
         }
       },
@@ -143,13 +143,13 @@
         "tags": [
           "tutor"
         ],
-        "summary": "Delete um tutor com base no ID passado no path URI",
-        "description": "Este endpoint tem como função excluir um determinado dado no banco de dados.",
+        "summary": "Delete a tutor based on the ID provided in the URI path",
+        "description": "This endpoint deletes a specific record in the database.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "O id do tutor passado via parametro URI",
+            "description": "The tutor's ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -158,10 +158,10 @@
         ],
         "responses": {
           "204": {
-            "description": "Deletado com sucesso."
+            "description": "Successfully deleted."
           },
           "400": {
-            "description": "O id do tutor não foi encontrado ou não existe."
+            "description": "The tutor's ID was not found or does not exist."
           }
         }
       }
@@ -171,13 +171,13 @@
         "tags": [
           "pet"
         ],
-        "summary": "Insere um PET atribuindo á um tutor.",
-        "description": "Este endpoint faz a inserção de um PET atribuindo-o a um Tutor.",
+        "summary": "Insert a pet assigned to a tutor.",
+        "description": "This endpoint adds a pet and assigns it to a tutor.",
         "parameters": [
           {
             "name": "tutorId",
             "in": "path",
-            "description": "O id do tutor passado via parametro URI",
+            "description": "The tutor's ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -185,7 +185,7 @@
           }
         ],
         "requestBody": {
-          "description": "Request body parar criar um novo pet.",
+          "description": "Request body to create a new pet.",
           "content": {
             "application/json": {
               "schema": {
@@ -196,10 +196,10 @@
         },
         "responses": {
           "201": {
-            "description": "Criado com sucesso."
+            "description": "Successfully created."
           },
           "400": {
-            "description": "O Id do tutor informado é inválido. | Os dados dos inputsfields não foram informados."
+            "description": "The provided tutor ID is invalid. | Input fields were not provided."
           }
         }
       }
@@ -209,13 +209,13 @@
         "tags": [
           "pet"
         ],
-        "summary": "Atualiza o cadastro de um pet atribuido a um tutor.",
-        "description": "Este endpoint faz a atualização dos dados de um pet que está atribuído a um tutor.",
+        "summary": "Update a pet's record assigned to a tutor.",
+        "description": "This endpoint updates the data of a pet assigned to a tutor.",
         "parameters": [
           {
             "name": "petId",
             "in": "path",
-            "description": "O id do pet passado via parametro URI",
+            "description": "The pet's ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -224,7 +224,7 @@
           {
             "name": "tutorId",
             "in": "path",
-            "description": "O id do tutor do pet passado via parametro URI",
+            "description": "The pet's tutor ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -232,7 +232,7 @@
           }
         ],
         "requestBody": {
-          "description": "O requestbody para atualizar os dados do pet. (ID Não precisa.)",
+          "description": "Request body to update the pet's data. (ID not required.)",
           "content": {
             "application/json": {
               "schema": {
@@ -243,10 +243,10 @@
         },
         "responses": {
           "201": {
-            "description": "Atualizado com sucesso."
+            "description": "Successfully updated."
           },
           "400": {
-            "description": "O Id do Tutor ou do Pet não é válido ou não existe | Os inputfields não foram preenchidos."
+            "description": "Invalid or non-existent tutor or pet ID | Input fields were not provided."
           }
         }
       },
@@ -254,13 +254,13 @@
         "tags": [
           "pet"
         ],
-        "summary": "Delete um pet que é atribuído a um tutor.",
-        "description": "este endpoint faz a exclusão dos dados de um pet que está atribuído a um tutor.",
+        "summary": "Delete a pet assigned to a tutor.",
+        "description": "This endpoint deletes the data of a pet assigned to a tutor.",
         "parameters": [
           {
             "name": "petId",
             "in": "path",
-            "description": "O id do pet passado via parametro URI",
+            "description": "The pet's ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -269,7 +269,7 @@
           {
             "name": "tutorId",
             "in": "path",
-            "description": "O id do tutor do pet passado via parametro URI",
+            "description": "The pet's tutor ID provided as a URI parameter",
             "required": true,
             "schema": {
               "type": "integer"
@@ -278,10 +278,10 @@
         ],
         "responses": {
           "204": {
-            "description": "Deletado com sucesso."
+            "description": "Successfully deleted."
           },
           "400": {
-            "description": "Tutor ou pet não encontrado ou não existe."
+            "description": "Tutor or pet not found or does not exist."
           }
         }
       }
@@ -405,7 +405,7 @@
     },
     "requestBodies": {
       "Tutor": {
-        "description": "Objeto do tutor que precisa ser informado para inserção do mesmo no servidor.",
+        "description": "Tutor object required to insert a tutor into the server.",
         "content": {
           "application/json": {
             "schema": {
@@ -415,7 +415,7 @@
         }
       },
       "Pet": {
-        "description": "Objet do tutor que precisa ser informado para inserção do mesmo no servidor.",
+        "description": "Pet object required to insert a pet into the server.",
         "content": {
           "application/json": {
             "schema": {

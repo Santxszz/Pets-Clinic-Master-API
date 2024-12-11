@@ -41,7 +41,7 @@ module.exports.createPet = async (req, res, next) => {
     })
   }
 
-  await CreatePetService.CreateTutorService(
+  const petCreated = await CreatePetService.CreateTutorService(
     name,
     species,
     carry,
@@ -50,7 +50,18 @@ module.exports.createPet = async (req, res, next) => {
     TutorId
   )
 
+  const objectResponse = {
+    petId: petCreated.id,
+    name,
+    species,
+    carry,
+    weight,
+    date_of_birth: dayjs(date_of_birth).format('YYYY-MM-DD HH:mm'),
+    TutorId,
+  }
+
   return res.status(201).json({
+    petInfo: objectResponse,
     message: 'Pet successfully registered.',
     status: 201,
     info: 'Created',
@@ -101,7 +112,7 @@ module.exports.updatePet = async (req, res, next) => {
     })
   }
 
-  await UpdatePetService.UpdatePetService(
+  const updatedPet = await UpdatePetService.UpdatePetService(
     name,
     species,
     carry,
@@ -111,7 +122,18 @@ module.exports.updatePet = async (req, res, next) => {
     petId
   )
 
+  const objectResponse = {
+    petId: updatedPet.id,
+    name,
+    species,
+    carry,
+    weight,
+    date_of_birth: dayjs(date_of_birth).format('YYYY-MM-DD HH:mm'),
+    TutorId,
+  }
+
   return res.status(201).json({
+    petInfo: objectResponse,
     message: 'Pet successfully updated.',
     status: 201,
     info: 'Created',
@@ -121,6 +143,17 @@ module.exports.updatePet = async (req, res, next) => {
 module.exports.deletePet = async (req, res, next) => {
   const petId = Number(req.params.petId)
   const tutorId = Number(req.params.tutorId)
+
+  const petTutorConfirmation = await Pet.findOne({
+    where: { id: petId, TutorId: tutorId },
+  })
+  if (!petTutorConfirmation) {
+    return res.status(404).json({
+      message: 'Pet not found for this tutor!',
+      status: 404,
+      error: 'Not Found',
+    })
+  }
 
   const tutorExists = await Tutor.findOne({ where: { id: tutorId } })
   if (!tutorExists) {
