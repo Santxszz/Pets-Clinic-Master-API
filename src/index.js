@@ -28,12 +28,12 @@ app.use(tutorRouter);
 app.use(petsRoute);
 
 // Rota Api Docs
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocumentation));
+app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocumentation));
 
 // Middleware Celebrate Errors
 app.use(errors())
 
 // Conexão DB
-dbConnect.sync().then(() => {
+dbConnect.sync({force: true}).then(() => {
   app.listen(process.env.portServer);
 });
