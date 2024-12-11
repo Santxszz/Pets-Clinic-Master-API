@@ -1,6 +1,7 @@
 const dayjs = require('dayjs')
 
 const Tutor = require('../../database/models/Tutor')
+const Pet = require('../../database/models/Pet')
 
 const CreateTutorService = require('../../services/Tutor/CreateTutorService')
 const ListTutorsService = require('../../services/Tutor/ListTutorsService')
@@ -9,19 +10,45 @@ const DeleteTutorService = require('../../services/Tutor/DeleteTutorService')
 
 const emailValidation = require('../../utils/validations/emailValidation')
 const nameValidation = require('../../utils/validations/nameValidation')
-const Pet = require('../../database/models/Pet')
+const formatDate = require('../../utils/formatters/formatedDate')
 
 module.exports.listTutors = async (req, res, next) => {
-  const listTutors = await ListTutorsService.ListTutorsService()
-  if (listTutors.length <= 0) {
-    return res.status(404).json({
-      message: 'Tutors is not found.',
-      status: 404,
-      error: 'Not found.',
-    })
-  }
+  const listTutors = await ListTutorsService.ListTutorsService();
+if (listTutors.length <= 0) {
+  return res.status(404).json({
+    message: 'Tutors is not found.',
+    status: 404,
+    error: 'Not found.',
+  });
+}
 
-  return res.status(200).json(listTutors)
+// Função para formatar uma data no padrão "YYYY-MM-DD HH:mm"
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses começam em 0
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+
+// Mapear tutores e formatar data de nascimento e a dos pets
+const formattedTutors = listTutors.map(tutor => {
+  const formattedPets = tutor.Pets.map(pet => ({
+    ...JSON.parse(JSON.stringify(pet)),
+    date_of_birth: formatDate(pet.date_of_birth),
+  }));
+
+  return {
+    ...JSON.parse(JSON.stringify(tutor)),
+    date_of_birth: formatDate(tutor.date_of_birth), // Formatar data do tutor
+    Pets: formattedPets, // Adicionar pets com datas formatadas
+  };
+});
+
+return res.status(200).json(formattedTutors);
+
 }
 
 module.exports.createTutor = async (req, res, next) => {
@@ -72,7 +99,7 @@ module.exports.createTutor = async (req, res, next) => {
     })
   }
 
-  await CreateTutorService.CreateTutorService(
+  const tutorCreated = await CreateTutorService.CreateTutorService(
     name,
     phone,
     email,
@@ -80,7 +107,17 @@ module.exports.createTutor = async (req, res, next) => {
     zip_code
   )
 
+  const objectResponse = {
+    tutorId: tutorCreated.id,
+    name: tutorCreated.name,
+    phone: tutorCreated.phone,
+    email: tutorCreated.email,
+    date_of_birth: await formatDate(tutorCreated.date_of_birth),
+    zip_code: tutorCreated.zip_code,
+  }
+
   return res.status(201).json({
+    tutorInfo: objectResponse,
     message: 'Tutor successfully registered.',
     status: 201,
     info: 'Created',
@@ -128,7 +165,7 @@ module.exports.updateTutor = async (req, res, next) => {
     })
   }
 
-  await UpdateTutorService.UpdateTutorService(
+  const updatedTutor = await UpdateTutorService.UpdateTutorService(
     name,
     phone,
     email,
@@ -136,7 +173,18 @@ module.exports.updateTutor = async (req, res, next) => {
     zip_code,
     id
   )
+
+  const objectResponse = {
+    tutorId: id,
+    name,
+    phone,
+    email,
+    date_of_birth: dayjs(date_of_birth).format('YYYY-MM-DD HH:mm'),
+    zip_code,
+  }
+
   return res.status(201).json({
+    tutorInfo: objectResponse,
     message: 'Tutor registration updated successfully.',
     status: 201,
     info: 'Created',

@@ -19,7 +19,7 @@ const Pet = db.define(
   }
 );
 
-Tutor.hasMany(Pet);
+Tutor.hasMany(Pet, {onDelete: "CASCADE"});
 Pet.belongsTo(Tutor);
 
 module.exports = Pet;
